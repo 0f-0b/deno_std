@@ -7,7 +7,9 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "cargo"
-    directory: "/crypto/_wasm"
+    directories:
+      - "/crypto/_wasm"
+      - "/text/_wasm_casemap"
     schedule:
       interval: "weekly"
     groups:

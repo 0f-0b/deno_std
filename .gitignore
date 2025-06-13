@@ -7,6 +7,7 @@ docs/
 # rust build output
 crypto/_wasm/target
 cli/testdata/unicode_width_crate/target
+text/_wasm_casemap/target
 
 # coverage
 coverage/

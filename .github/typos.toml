@@ -18,5 +18,6 @@ extend-exclude = [
   "http/user_agent.ts",
   "jsonc/testdata",
   "ulid/*.ts",
-  "crypto/_wasm"
+  "crypto/_wasm/lib",
+  "text/_wasm_casemap/lib",
 ]

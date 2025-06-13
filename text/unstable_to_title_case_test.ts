@@ -5,7 +5,6 @@ import type {
   ExcludeWordConfig,
   ExcludeWordFilter,
 } from "./unstable_to_title_case.ts";
-import { stubLocaleCaseFunctions } from "./_test_util.ts";
 
 Deno.test("toTitleCase() converts a string to title case", () => {
   const input = "hello world";
@@ -30,19 +29,25 @@ Deno.test("toTitleCase() works with non-BMP code points", () => {
 });
 
 Deno.test("toTitleCase() can be customized with options", async (t) => {
-  await t.step("`force`", async (t) => {
-    const input = "HELLO wOrLd";
+  await t.step("`keepTrailingCase`", async (t) => {
+    const input = "hELLO wOrLd";
 
-    await t.step("defaults to `true`", () => {
+    await t.step("defaults to `false`", () => {
       assertEquals(toTitleCase(input), "Hello World");
     });
 
-    await t.step("explicitly passing `true`", () => {
-      assertEquals(toTitleCase(input, { force: true }), "Hello World");
+    await t.step("explicitly passing `false`", () => {
+      assertEquals(
+        toTitleCase(input, { keepTrailingCase: false }),
+        "Hello World",
+      );
     });
 
-    await t.step("disabled by passing `false`", () => {
-      assertEquals(toTitleCase(input, { force: false }), "HELLO WOrLd");
+    await t.step("enabled by passing `true`", () => {
+      assertEquals(
+        toTitleCase(input, { keepTrailingCase: true }),
+        "HELLO WOrLd",
+      );
     });
   });
 
@@ -50,17 +55,10 @@ Deno.test("toTitleCase() can be customized with options", async (t) => {
     const input = "irrIgation";
 
     await t.step('defaults to `false`, using locale-agnostic "und"', () => {
-      using _ = stubLocaleCaseFunctions("tr-TR");
       assertEquals(toTitleCase(input), "Irrigation");
     });
 
-    await t.step("`true` uses system-default locale", () => {
-      using _ = stubLocaleCaseFunctions("tr-TR");
-      assertEquals(toTitleCase(input, { locale: true }), "İrrıgation");
-    });
-
     await t.step("supports passing a specific locale", () => {
-      using _ = stubLocaleCaseFunctions("en-US");
       assertEquals(toTitleCase(input, { locale: "tr-TR" }), "İrrıgation");
     });
   });
@@ -94,7 +92,10 @@ Deno.test("toTitleCase() can be customized with options", async (t) => {
       const expected =
         "This Title Contains camelCase, PascalCase, and UPPERCASE Words";
 
-      assertEquals(toTitleCase(input, { exclude, force: false }), expected);
+      assertEquals(
+        toTitleCase(input, { exclude, keepTrailingCase: true }),
+        expected,
+      );
     });
   });
 

@@ -1,6 +1,10 @@
 // Copyright 2018-2025 the Deno authors. MIT license.
 // This module is browser compatible.
-import { resolveOptions, titleCaseWord } from "./_title_case_util.ts";
+import {
+  lowerCaseRest,
+  resolveOptions,
+  titleCaseWord,
+} from "./_title_case_util.ts";
 import type { BaseTitleCaseOptions } from "./_title_case_util.ts";
 export type { BaseTitleCaseOptions };
 
@@ -40,8 +44,7 @@ export function toSentenceCase(
   for (const s of opts.segmenter.segment(input)) {
     if (s.isWordLike) {
       const rest = input.slice(s.index + s.segment.length);
-      return out + titleCaseWord(s.segment, opts) +
-        (opts.force ? rest.toLocaleLowerCase(opts.locale) : rest);
+      return out + titleCaseWord(s.segment, opts) + lowerCaseRest(rest, opts);
     } else {
       out += s.segment;
     }
